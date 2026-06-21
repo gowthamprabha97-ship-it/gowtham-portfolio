@@ -31,32 +31,21 @@ export default function HeroSection() {
       className="relative w-full h-screen min-h-[700px] overflow-hidden"
     >
       {/* Background Video */}
-      <video
+      <<video
   ref={videoRef}
-  className="absolute inset-0 w-full h-full object-cover z-0"
-  src="/videos/introduction.mp4"
+  className="absolute inset-0 w-full h-full object-cover"
   controls
+  playsInline
   preload="auto"
-  onLoadedData={() => {
-    console.log("VIDEO LOADED");
-  }}
-  onPlay={() => {
-    console.log("VIDEO PLAYING");
-  }}
-  onError={(e) => {
-    console.log("VIDEO ERROR", e);
-  }}
 >
+  <source src="/videos/introduction.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
 </video>
 
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/45 z-10" />
+{/* Overlay removed for testing */}
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent z-10" />
-
-      {/* Content - Bottom Left */}
-      <div className="relative z-20 h-full flex items-end pb-24">
+{/* Content - Bottom Left */}
+<div className="relative z-20 h-full flex items-end pb-24">
         <div className="max-w-xl ml-6 md:ml-12 lg:ml-20 text-left">
 
           <motion.div
