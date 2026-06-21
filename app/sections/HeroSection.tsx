@@ -43,7 +43,7 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative w-full h-screen min-h-[700px] overflow-hidden"
+      className="relative w-full h-screen min-h-[700px] overflow-hidden bg-black"
     >
       {/* Background Video */}
       <video
@@ -51,16 +51,16 @@ export default function HeroSection() {
         className="absolute inset-0 w-full h-full object-cover"
         playsInline
         loop
-        muted // Add this static attribute as a fallback
+        muted // Static attribute as a fallback
       >
         <source src="/videos/introduction.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
-      {/* Audio Toggle Button - Top Right */}
+      {/* Audio Toggle Button - Top Right (z-50 guarantees it is clickable) */}
       <button
         onClick={toggleAudio}
-        className="absolute top-6 right-6 md:top-8 md:right-12 z-30 p-3 rounded-full bg-black/40 backdrop-blur-md text-white border border-white/20 hover:bg-black/60 transition-all duration-300"
+        className="absolute top-6 right-6 md:top-8 md:right-12 z-50 p-3 rounded-full bg-black/40 backdrop-blur-md text-white border border-white/20 hover:bg-black/60 transition-all duration-300 cursor-pointer shadow-lg"
         aria-label="Toggle Audio"
       >
         {isMuted ? (
@@ -70,11 +70,9 @@ export default function HeroSection() {
         )}
       </button>
 
-      {/* Overlay removed for testing */}
-
       {/* Content - Bottom Left */}
-      <div className="relative z-20 h-full flex items-end pb-24">
-        <div className="max-w-xl ml-6 md:ml-12 lg:ml-20 text-left">
+      <div className="relative z-20 h-full flex items-end pb-24 pointer-events-none">
+        <div className="max-w-xl ml-6 md:ml-12 lg:ml-20 text-left pointer-events-auto">
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -147,7 +145,7 @@ export default function HeroSection() {
                   .getElementById("projects")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
-              className="px-6 py-3 rounded-xl bg-cyan-500 text-white font-semibold hover:bg-cyan-600 transition"
+              className="px-6 py-3 rounded-xl bg-cyan-500 text-white font-semibold hover:bg-cyan-600 transition shadow-lg shadow-cyan-500/20"
             >
               View My Work
             </button>
@@ -167,10 +165,11 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Scroll */}
+      {/* Scroll Indicator */}
       <button
         onClick={scrollDown}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 text-white"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 text-white cursor-pointer"
+        aria-label="Scroll Down"
       >
         <ChevronDown className="w-6 h-6 animate-bounce" />
       </button>
