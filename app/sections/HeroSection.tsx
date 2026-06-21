@@ -33,12 +33,19 @@ export default function HeroSection() {
       {/* Background Video */}
       <video
   ref={videoRef}
-  className="absolute inset-0 w-full h-full object-cover"
+  className="absolute inset-0 w-full h-full object-cover z-0"
   src="/videos/introduction.mp4"
   controls
-  loop
-  playsInline
   preload="auto"
+  onLoadedData={() => {
+    console.log("VIDEO LOADED");
+  }}
+  onPlay={() => {
+    console.log("VIDEO PLAYING");
+  }}
+  onError={(e) => {
+    console.log("VIDEO ERROR", e);
+  }}
 >
 </video>
 
