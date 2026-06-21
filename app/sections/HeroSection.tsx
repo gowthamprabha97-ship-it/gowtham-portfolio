@@ -15,17 +15,43 @@ export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
 
-  // BULLETPROOF AUTOPLAY LOGIC
+  // SCROLL VISIBILITY & AUTOPLAY LOGIC
   useEffect(() => {
-    if (videoRef.current) {
-      // Force mute directly on the DOM element before playing
-      videoRef.current.defaultMuted = true;
-      videoRef.current.muted = true;
-      
-      videoRef.current.play().catch((error) => {
-        console.warn("Autoplay was still blocked by the browser:", error);
-      });
-    }
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
+
+    // Force initial mute to satisfy browser policies
+    videoElement.defaultMuted = true;
+    videoElement.muted = true;
+
+    // Create an observer to watch if the video is currently on screen
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        
+        if (entry.isIntersecting) {
+          // If the user can see the hero section, play the video
+          videoElement.play().catch((error) => {
+            console.warn("Autoplay was blocked by the browser:", error);
+          });
+        } else {
+          // If the user scrolls past the hero section, pause the video (and audio)
+          videoElement.pause();
+        }
+      },
+      {
+        threshold: 0.1, // Triggers the pause when 90% of the video is scrolled out of view
+      }
+    );
+
+    observer.observe(videoElement);
+
+    // Cleanup the observer when you navigate away from the page
+    return () => {
+      if (videoElement) {
+        observer.unobserve(videoElement);
+      }
+    };
   }, []);
 
   const toggleAudio = () => {
@@ -57,7 +83,7 @@ export default function HeroSection() {
         Your browser does not support the video tag.
       </video>
 
-      {/* Audio Toggle Button - Top Right (z-50 guarantees it is clickable) */}
+      {/* Audio Toggle Button - Top Right */}
       <button
         onClick={toggleAudio}
         className="absolute top-6 right-6 md:top-8 md:right-12 z-50 p-3 rounded-full bg-black/40 backdrop-blur-md text-white border border-white/20 hover:bg-black/60 transition-all duration-300 cursor-pointer shadow-lg"
