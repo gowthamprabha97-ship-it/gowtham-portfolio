@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Volume2, VolumeX } from "lucide-react";
 
 const roles = [
   "AI Engineer",
@@ -13,12 +13,27 @@ const roles = [
 
 export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMuted, setIsMuted] = useState(true);
 
+  // BULLETPROOF AUTOPLAY LOGIC
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
+      // Force mute directly on the DOM element before playing
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      
+      videoRef.current.play().catch((error) => {
+        console.warn("Autoplay was still blocked by the browser:", error);
+      });
     }
   }, []);
+
+  const toggleAudio = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
 
   const scrollDown = () => {
     const el = document.getElementById("journey");
@@ -31,21 +46,34 @@ export default function HeroSection() {
       className="relative w-full h-screen min-h-[700px] overflow-hidden"
     >
       {/* Background Video */}
-      <<video
-  ref={videoRef}
-  className="absolute inset-0 w-full h-full object-cover"
-  controls
-  playsInline
-  preload="auto"
->
-  <source src="/videos/introduction.mp4" type="video/mp4" />
-  Your browser does not support the video tag.
-</video>
+      <video
+        ref={videoRef}
+        className="absolute inset-0 w-full h-full object-cover"
+        playsInline
+        loop
+        muted // Add this static attribute as a fallback
+      >
+        <source src="/videos/introduction.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
 
-{/* Overlay removed for testing */}
+      {/* Audio Toggle Button - Top Right */}
+      <button
+        onClick={toggleAudio}
+        className="absolute top-6 right-6 md:top-8 md:right-12 z-30 p-3 rounded-full bg-black/40 backdrop-blur-md text-white border border-white/20 hover:bg-black/60 transition-all duration-300"
+        aria-label="Toggle Audio"
+      >
+        {isMuted ? (
+          <VolumeX className="w-6 h-6 text-white/80" />
+        ) : (
+          <Volume2 className="w-6 h-6 text-cyan-400 animate-pulse" />
+        )}
+      </button>
 
-{/* Content - Bottom Left */}
-<div className="relative z-20 h-full flex items-end pb-24">
+      {/* Overlay removed for testing */}
+
+      {/* Content - Bottom Left */}
+      <div className="relative z-20 h-full flex items-end pb-24">
         <div className="max-w-xl ml-6 md:ml-12 lg:ml-20 text-left">
 
           <motion.div
@@ -69,11 +97,9 @@ export default function HeroSection() {
             <span className="block text-white text-4xl md:text-6xl lg:text-7xl">
               GOWTHAM
             </span>
-
             <span className="block text-cyan-400 text-4xl md:text-6xl lg:text-7xl">
               REDDY
             </span>
-
             <span className="block text-white/80 text-xl md:text-3xl tracking-[0.25em] mt-2">
               ADDULA
             </span>
