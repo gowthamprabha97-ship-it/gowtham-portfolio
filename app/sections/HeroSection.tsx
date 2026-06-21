@@ -32,11 +32,13 @@ export default function HeroSection() {
     >
       {/* Background Video */}
       <video
+  ref={videoRef}
   className="absolute inset-0 w-full h-full object-cover"
   src="/videos/introduction.mp4"
+  controls
   loop
   playsInline
-  controls
+  preload="auto"
 >
 </video>
 
