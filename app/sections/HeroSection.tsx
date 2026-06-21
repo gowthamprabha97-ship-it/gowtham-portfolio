@@ -34,8 +34,6 @@ export default function HeroSection() {
       <video
   className="absolute inset-0 w-full h-full object-cover"
   src="/videos/introduction.mp4"
-  autoPlay
-  muted
   loop
   playsInline
   controls
